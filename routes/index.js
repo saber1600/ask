@@ -247,4 +247,12 @@ module.exports = function(app){
 		})
 	});
 
+	//后台管理
+	app.post('/admin',function(req,res){
+		es.render('adminlogin', { 
+	    	user:req.session.user,
+	    	error: req.flash('error').toString()
+	    });
+	});
+
 };
