@@ -234,7 +234,6 @@ module.exports = function(app){
 		})
 	});
 
-
 	app.post('/answer',function(req,res){
 		var answer={};
 		answer.answer=req.body.answer;
@@ -248,11 +247,51 @@ module.exports = function(app){
 	});
 
 	//后台管理
-	app.post('/admin',function(req,res){
-		es.render('adminlogin', { 
+	app.get('/admin',function(req,res){
+		res.render('adminlogin', { 
 	    	user:req.session.user,
 	    	error: req.flash('error').toString()
 	    });
 	});
 
+	app.post('/adminLogin',function(req,res){
+		var adminName=req.body.name;
+		var md5 = crypto.createHash('md5'),
+	      adminPwd = md5.update(req.body.password).digest('hex');
+		User.superAdmin(adminName,adminPwd,function(info){
+			if(info=="true"){
+				// res.render('adminlogin', { 
+			 //    	user:req.session.user,
+			 //    	error: req.flash('error').toString()
+			 //    });
+			    res.redirect('/admincon');
+
+			}else{
+				res.redirect('/show');
+			}
+			
+		});		
+	});
+
+	app.get('/admincon',function(req,res){
+		User.getQuestionAdmin(function(data){
+	    	res.render('admincon',{
+	    		lists:data,
+	    		user:req.session.user,
+	    	});
+	    });
+
+	});
+
+	app.post('/adminchange',function(req,res){
+		var change=req.body.change,
+			id=req.body.id,
+			childId=req.body.childId,
+			delAndRe=req.body.delAndRe
+		User.adminChange(change,id,childId,delAndRe,function(data){
+			if(data==1){
+				res.redirect('/admincon');
+			}
+	    });
+	});
 };
