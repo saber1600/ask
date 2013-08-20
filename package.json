@@ -12,6 +12,7 @@
     "connect-mongo": "*",
     "connect-flash": "*",
     "request": "*",
-    "cheerio": "*"
+    "cheerio": "*",
+    "socket.io": "*"
   }
 }
