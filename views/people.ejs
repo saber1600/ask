@@ -16,6 +16,8 @@
           <div id="edit">编辑</div>
           <% }%>
         </div>
+        <p class="btn disabled">隐身</p>
+        <a class="btn btn-success" data-toggle="modal" id="talk" href="#talkBox">聊天</a>
         <% if (user.name==name) { %>
         <div class="span8" id="infoEdit" style="display:none;">
           <form action="/people" method="post">
@@ -51,6 +53,17 @@
         <div class="tab-pane" id="messages">热门</div>
       </div>
  
+<div id="talkBox" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-body">
+    <p><input type="text" placeholder="标题" name="title" id="askTitle"></p>
+    <textarea name="askText" rows="13" placeholder="正文" style="width:400px" id="askText"></textarea>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true" id="closeAsk">关闭</button>
+    <button class="btn" id="askPost">提问</button>
+  </div>
+</div>
+
 <script>
 
 $('#myTab a:first').tab('show');
@@ -71,6 +84,10 @@ $("#edit").on("click",function(){
 $("#noEdit").on("click",function(){
   $("#info").show();
   $("#infoEdit").hide();
+});
+
+$("#talk").on("click",function(){
+
 });
 </script>
 
