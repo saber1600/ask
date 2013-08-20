@@ -360,6 +360,7 @@ module.exports = function(app){
 			  // res.write(html[0]);
 			  // res.end();
 			  res.send(html[1]);
+			  
 		    }
 		  });
 		
