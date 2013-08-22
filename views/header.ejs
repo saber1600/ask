@@ -78,13 +78,3 @@ $("#askPost").on("click",function(){
   });
 });
 </script>
-<% if(user){%>
-<script>
-//如果登陆，发送信息
-var socket = io.connect();
-//var online=false;
-socket.emit('online',{user:"<%= user.name%>"});
-</script>
-<% }%>
-
-
