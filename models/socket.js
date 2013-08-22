@@ -24,5 +24,9 @@ module.exports = function(io){
 		    socket.broadcast.emit('offline',{users:users,user:socket.name});
 		  }
 		});
+
+		socket.on('selfTalk',function(data){
+		  var l;
+		});
 	});
 };

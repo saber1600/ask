@@ -59,12 +59,12 @@
  
 <div id="talkBox" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-body">
-    <p><input type="text" placeholder="标题" name="title" id="askTitle"></p>
-    <textarea name="askText" rows="13" placeholder="正文" style="width:400px" id="askText"></textarea>
+    <p>私聊</p>
+    <textarea name="askText" rows="5" placeholder="正文" style="width:400px" id="selfTalk"></textarea>
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true" id="closeAsk">关闭</button>
-    <button class="btn" id="askPost">提问</button>
+    <button class="btn" id="talkPost">提问</button>
   </div>
 </div>
 
@@ -89,8 +89,9 @@ $("#noEdit").on("click",function(){
   $("#infoEdit").hide();
 });
 
-$("#talk").on("click",function(){
-
+$("#talkPost").on("click",function(){
+  //socket.emit('selfTalk',{from:"<%= user.name%>",to:"<%= name%>",talk:"111"});
+  socket.emit('online',{user:"zhang"});
 });
 
 socket.on('online',function(data){
