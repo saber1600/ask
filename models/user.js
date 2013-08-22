@@ -156,6 +156,7 @@ User.ask = function(ask, callback){//读取用户信息
       minute : date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes()
     }
     ask.time=time;
+    ask.hide=true;
 
     db.collection('question',function(err,collection){
       if(err){
@@ -181,8 +182,6 @@ User.ask = function(ask, callback){//读取用户信息
   })
 };
 
-
-
 User.getQuestion=function(callback){
   //打开数据库
   mongodb.open(function(err, db){
@@ -196,7 +195,7 @@ User.getQuestion=function(callback){
         return callback(err);
       }
       //查找用户名 name 值为 name文档
-      collection.find().limit(5).sort({time:-1}).toArray(function(err,items){
+      collection.find({hide:{$ne:false}}).limit(5).sort({time:-1}).toArray(function(err,items){
         if(err) throw err;
         mongodb.close();
         //遍历数据
@@ -307,3 +306,103 @@ User.answer=function(questionId,answer,callback){
     });
   });
 };
+//暂时
+//这里默认name==tang为超级管理员
+User.superAdmin=function(name,psd,callback){
+  //打开数据库
+  mongodb.open(function(err, db){
+    if(err){
+      return callback(err);
+    }
+    //读取 users 集合
+    db.collection('user', function(err, collection){
+      if(err){
+        mongodb.close();
+        return callback(err);
+      }
+      //查找用户名 name 值为 name文档
+      collection.find({ name : 'tang' }).toArray(function(err,items){
+        if(err) throw err;
+        mongodb.close();
+        if(psd==items[0].password){
+          return callback("true");
+        }else{
+          return callback("false");
+        }
+        //遍历数据
+        //return callback(items);
+      });
+    });
+  });
+};
+
+User.getQuestionAdmin=function(callback){
+  //打开数据库
+  mongodb.open(function(err, db){
+    if(err){
+      return callback(err);
+    }
+    //读取 users 集合
+    db.collection('question', function(err, collection){
+      if(err){
+        mongodb.close();
+        return callback(err);
+      }
+      //查找用户名 name 值为 name文档
+      collection.find().limit(10).sort({time:-1}).toArray(function(err,items){
+        if(err) throw err;
+        mongodb.close();
+        //遍历数据
+        return callback(items);
+      });
+    });
+  });
+};
+
+User.adminChange=function(change,id,childId,delAndRe,callback){
+  //打开数据库
+  mongodb.open(function(err, db){
+    if(err){
+      return callback(err);
+    }
+    //读取 users 集合
+    db.collection('question', function(err, collection){
+      if(err){
+        mongodb.close();
+        return callback(err);
+      }
+      //查找用户名 name 值为 name文档
+      if(delAndRe=="del"){
+        if(childId==""){
+          collection.update({'_id':Number(id)},{$set:{hide:false}},function(err,info){
+            if(err) throw err;
+            mongodb.close();
+            callback(info);//成功！返回插入的用户信息
+          });
+        }else{
+          collection.update({"answer.answer":childId},{$set:{hide:false}},function(err,info){
+            if(err) throw err;
+            mongodb.close();
+            callback(info);//成功！返回插入的用户信息
+          });
+        }
+      }else{
+        if(childId==""){
+          collection.update({'_id':Number(id)},{$set:{hide:true}},function(err,info){
+            if(err) throw err;
+            mongodb.close();
+            callback(info);//成功！返回插入的用户信息
+          });
+        }else{
+          collection.update({"answer.answer":childId},{$set:{hide:true}},function(err,info){
+            if(err) throw err;
+            mongodb.close();
+            callback(info);//成功！返回插入的用户信息
+          });
+        }
+      }
+      
+      
+    });
+  });
+}
