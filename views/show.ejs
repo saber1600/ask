@@ -78,7 +78,11 @@ $("#getMore").on("click",function(){
 });
 
 
-
+var socket = io.connect();
+socket.emit('online',{user:"tang"});
+socket.on('online',function(data){
+  var l;
+});
 </script>
 
 <%- include footer %>

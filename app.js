@@ -43,8 +43,10 @@ if ('development' == app.get('env')) {
 
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
-//socket 通信
-sock(io);
+io.sockets.on('connection',function(socket){
+  //有人上线
+  sock(socket);
+});
 
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
