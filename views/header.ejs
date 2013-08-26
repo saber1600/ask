@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <title>Blog</title>
-<base href="http://localhost:3000/" />
+<!-- <base href="http://localhost:3000/" /> -->
+<base href="http://192.168.2.186:3000/" />
 <link rel="stylesheet" href="stylesheets/style.css">
 <link rel="stylesheet" href="stylesheets/bootstrap.min.css">
 <script type="text/javascript" src="javascripts/jquery-1.8.0.min.js"></script>
@@ -45,7 +46,8 @@
           </li>
           <% if(user){%>
           <li><a href="/loginout">退出</a></li>
-          <li><a href="/people/<%= user.name%>"><%= user.name%></a></li>
+          <li><a href="/people/<%= user.name%>" id="myName"><%= user.name%></a></li>
+          <li id="news" style="display:none;"><a href="#talkBox" data-toggle="modal"><i class="icon-envelope icon-white"></i></a></li>
           <% }%>
         </ul>
       </div><!--/.nav-collapse -->
@@ -69,6 +71,20 @@
   </div>
 </div>
 
+<!-- 聊天 -->
+<div id="talkBox" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-body">
+    <p>聊天</p>
+    <div class="modal-body" id="talkCom">
+    </div>
+    <textarea name="askText" rows="5" placeholder="正文" style="width:400px" id="selfTalk"></textarea>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true" id="closeAsk">关闭</button>
+    <button class="btn" id="talkPost">提问</button>
+  </div>
+</div>
+
 <script>
 $("#askPost").on("click",function(){
   $.post("ask", { title: $("#askTitle").val(), askText: $("#askText").val() },function(data) {
@@ -77,12 +93,39 @@ $("#askPost").on("click",function(){
     }
   });
 });
+var socket = io.connect();
+var talkNews={};
+//接收聊天消息
+socket.on('selfTalk',function(data){
+  talkNews.from=data.from;
+  $("#news").show();
+  $("#talkCom").append("<p>"+data.from+"对你说："+data.talk+"</p>");
+});
+
+//发送聊天消息
+$("#talkPost").on("click",function(){
+  if($("#toName").length>0){
+    talkNews.from=$("#toName").text();
+  }
+  socket.emit('selfTalk',
+    {from:$("#myName").text(),
+    to:talkNews.from,
+    talk:$("#selfTalk").val()},
+    function(info){
+      if(info=="ok"){
+        $("#talkCom").append("<p style='color:pink;'>你对"+$("#toName").text()+"说："+$("#selfTalk").val()+"</p>");
+        $("#selfTalk").val("");
+      }
+  });
+});
+//点击消息显示
+$("#news").on("click",function(){
+  $("#news").hide();
+});
 </script>
 <% if(user){%>
 <script>
 //如果登陆，发送信息
-var socket = io.connect();
-//var online=false;
 socket.emit('online',{user:"<%= user.name%>"});
 </script>
 <% }%>
