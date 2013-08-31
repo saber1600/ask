@@ -13,6 +13,8 @@
     "connect-flash": "*",
     "request": "*",
     "cheerio": "*",
-    "socket.io": "*"
+    "socket.io": "*",
+    "gm": "*",
+    "node-images": "*"
   }
 }

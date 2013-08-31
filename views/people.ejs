@@ -5,7 +5,7 @@
       <div class="row-fluid">
         <h1 id="toName"><%= name%></h1>
         <div class="span3">
-          <img src="images/11.jpg">
+          <img src=<%= imgUrl%> style="width:127px;height:111px;">
         </div>
         <div class="span8" id="info">
           <p>地址：<%= address%></p>
@@ -23,11 +23,12 @@
         <% if (user) { %>
           <% if (user.name==name) { %>
           <div class="span8" id="infoEdit" style="display:none;">
-            <form action="/people" method="post">
+            <form action="/people" method="post" enctype="multipart/form-data">
                 <input type="text" placeholder="地址" name="address">
                 <input type="text" placeholder="公司" name="company">
                 <input type="text" placeholder="学校" name="school">
                 <input type="text" placeholder="个人简介" name="info">
+                <br/>修改头像<input type="file" name="thumbnail">
                 <button type="submit" class="btn">提交</button>
                 <div id="noEdit">取消</div>
             </form>

@@ -8,7 +8,7 @@
           <div class="span2">
             <div class="row" style="margin-top:20px;">
               <div class="span8 offset2">
-                <a href='<%= list.url %>'><img src="images/11.jpg"></a>
+                <a href='<%= list.url %>'><img src="<%= list.imgUrl %>"></a>
               </div>
               <div class="span8 offset2">
                 <%= list.name %>
@@ -76,9 +76,5 @@ $("#getMore").on("click",function(){
     element.append(html);
   });
 });
-
-
-
 </script>
-
 <%- include footer %>
